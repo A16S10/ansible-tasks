@@ -1,0 +1,27 @@
+---
+- name: Setup environment on remote host
+  hosts: hosts
+  become: yes  # Use sudo privileges 
+  vars_files:
+    - vault.yaml  # Including the vault file with passwords
+  tasks:
+    - name: Add the user 'ansible_user' with a specific uid
+      ansible.builtin.user:
+        name: ansible_user2
+        create_home: yes
+        shell: /bin/bash
+        uid: 1042
+        groups: admin,developers
+        append: yes
+        password: "{{ vault_ansible_user_password }}"
+      register: user_creation_result  # Registering the result of the user creation
+
+    - name: Print success message if user was added successfully
+      ansible.builtin.debug:
+        msg: "User ansible_user2 has been added successfully."
+      when: user_creation_result.changed  # This will run only if the user was created
+
+    - name: Print failure message if user was not added
+      ansible.builtin.debug:
+        msg: "Failed to add user ansible_user2."
+      when: not user_creation_result.changed  # This will run only if the user was not created
