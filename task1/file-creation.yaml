@@ -1,0 +1,26 @@
+---
+- name: Setup environment on remote host
+  hosts: hosts
+  become: yes  # Use this if you need sudo privileges
+  vars_files:
+   - vault.yml
+  tasks:
+    - name: Create a directory if it does not exist
+      ansible.builtin.file:
+        path: /home/user1/mlops/
+        state: directory
+        mode: '0755'
+      
+    - name: Copy file with owner and permissions
+      ansible.builtin.copy:
+        src: /home/arshad/mlops-zoomcamp-project-cohort-2024
+        dest: /home/user1/mlops/
+        owner: user1
+        group: user1
+        mode: '0644'
+        
+    - name: Install nginx (state=present is optional)
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+        update_cache: yes  # Update the package index before installing
