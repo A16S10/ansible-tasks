@@ -1,0 +1,6 @@
+---    
+- name: Install the latest version of Apache and MariaDB
+  ansible.builtin.package:
+    name: "{{ mariadb_package }}"
+    state: latest
+  become: yes
