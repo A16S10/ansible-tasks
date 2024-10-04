@@ -1,0 +1,17 @@
+---
+- name: Setup environment on remote host
+  hosts: hosts
+  become: yes
+  vars_files:
+    - vault.yml
+  tasks:
+    - name: Start service nginx, if not started
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: print sudo password
+      debug:
+       msg: "The sudo password is {{vault_sudo_password}}"
+
