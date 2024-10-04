@@ -1,0 +1,23 @@
+---
+- name: Install web server package
+  package:
+    name: "{{ web }}"
+    state: present
+
+- name: Copy index.html file to web root
+  copy:
+    src: /usr/share/nginx/html/index.html
+    dest: /home/user1  
+
+- name: Start and enable web server service
+  service:
+    name: "{{ web }}"
+    state: started
+    enabled: yes
+
+- name: Install the latest version of Apache and MariaDB
+  ansible.builtin.package:
+    name: "{{ db }}"
+      - httpd
+      - mariadb-server
+    state: latest
